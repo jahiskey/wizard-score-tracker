@@ -4,8 +4,12 @@ export function getMaxRounds(numPlayers: number): number {
   return Math.floor(TOTAL_CARDS / numPlayers);
 }
 
-export function getDealerSeatIndex(roundNumber: number, numPlayers: number): number {
-  return (roundNumber - 1) % numPlayers;
+export function getDealerSeatIndex(
+  roundNumber: number,
+  numPlayers: number,
+  firstDealerSeatIndex: number
+): number {
+  return (firstDealerSeatIndex + roundNumber - 1) % numPlayers;
 }
 
 export function computePlayerScore(bid: number, tricks: number): number {

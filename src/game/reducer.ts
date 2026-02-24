@@ -32,6 +32,7 @@ const createEmptyGameState = (): GameState => ({
   edition: 'deluxe',
   numPlayers: 0,
   players: [],
+  firstDealerSeatIndex: 0,
   maxRounds: 0,
   currentRoundIndex: 0,
   phase: 'setup',
@@ -69,13 +70,14 @@ const createNullRecord = (
 const createRounds = (
   players: Player[],
   numPlayers: number,
-  maxRounds: number
+  maxRounds: number,
+  firstDealerSeatIndex: number
 ): RoundEntry[] => {
   const rounds: RoundEntry[] = [];
   for (let roundNumber = 1; roundNumber <= maxRounds; roundNumber += 1) {
     rounds.push({
       roundNumber,
-      dealerSeatIndex: getDealerSeatIndex(roundNumber, numPlayers),
+      dealerSeatIndex: getDealerSeatIndex(roundNumber, numPlayers, firstDealerSeatIndex),
       bids: createNullRecord(players, null),
       tricks: createNullRecord(players, null),
       scoresDelta: null,
@@ -92,6 +94,7 @@ const createGameState = (payload: {
 }): GameState => {
   const players = createPlayerList(payload.players, payload.numPlayers);
   const maxRounds = getMaxRounds(payload.numPlayers);
+  const firstDealerSeatIndex = Math.floor(Math.random() * payload.numPlayers);
   const createdAtIso = nowIso();
 
   return {
@@ -99,10 +102,11 @@ const createGameState = (payload: {
     edition: 'deluxe',
     numPlayers: payload.numPlayers,
     players,
+    firstDealerSeatIndex,
     maxRounds,
     currentRoundIndex: 0,
     phase: 'bidding',
-    rounds: createRounds(players, payload.numPlayers, maxRounds),
+    rounds: createRounds(players, payload.numPlayers, maxRounds, firstDealerSeatIndex),
     createdAtIso,
     updatedAtIso: createdAtIso,
   };
@@ -208,3 +212,4 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 }
 
 export const initialGameState = createEmptyGameState();
+

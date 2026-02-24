@@ -29,6 +29,7 @@ export interface GameState {
   edition: "deluxe";
   numPlayers: number;
   players: Player[];
+  firstDealerSeatIndex: number; // randomly chosen at game start
   maxRounds: number; // 60 / numPlayers
   currentRoundIndex: number; // 0-based
   phase: Phase;
